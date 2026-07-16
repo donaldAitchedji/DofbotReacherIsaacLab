@@ -1,0 +1,24 @@
+[package]
+
+# Semantic Versioning is used: https://semver.org/
+version = "0.1.0"
+
+# Description
+category = "isaaclab"
+readme  = "README.md"
+
+title = "Dofbot Reacher"
+author = "Isaac Lab Project Developers"
+maintainer = "Isaac Lab Project Developers"
+description = "Isaac Lab Direct RL environment: train a Yahboom Dofbot 5-DoF arm to reach random 3D targets."
+repository = "https://github.com/isaac-sim/IsaacLab.git"
+keywords = ["extension", "isaaclab", "dofbot", "reacher", "manipulation"]
+
+[dependencies]
+"isaaclab" = {}
+"isaaclab_assets" = {}
+"isaaclab_rl" = {}
+"isaaclab_tasks" = {}
+
+[[python.module]]
+name = "dofbot_reacher"

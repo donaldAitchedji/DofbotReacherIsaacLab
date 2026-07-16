@@ -1,0 +1,26 @@
+seed: 42
+
+# --------------------------------------------------------------------------
+# A2C: on-policy, single epoch, no clipping. Fields below match skrl 2.x's
+# `skrl.agents.torch.a2c.A2C_CFG` dataclass (NOT the old A2C_DEFAULT_CONFIG
+# dict from skrl 1.x). Notably: `lambda` -> `gae_lambda`, no `value_loss_scale`
+# (A2C_CFG doesn't expose one), no `learning_epochs` (A2C does a single pass).
+# --------------------------------------------------------------------------
+agent:
+  rollouts: 16                 # steps collected per env before an update
+  mini_batches: 4
+  discount_factor: 0.99
+  gae_lambda: 0.95
+  learning_rate: 1.0e-3
+  random_timesteps: 0
+  learning_starts: 0
+  grad_norm_clip: 1.0
+  entropy_loss_scale: 0.0
+  time_limit_bootstrap: true   # bootstrap value at episode timeout (not at success)
+  experiment:
+    directory: "dofbot_reacher_a2c"
+    write_interval: 200
+    checkpoint_interval: 2000
+
+trainer:
+  timesteps: 4000  #48000

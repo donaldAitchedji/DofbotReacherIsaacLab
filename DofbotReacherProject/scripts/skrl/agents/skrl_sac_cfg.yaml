@@ -1,0 +1,31 @@
+seed: 42
+
+# --------------------------------------------------------------------------
+# SAC: fields match skrl 2.x's `skrl.agents.torch.sac.SAC_CFG` dataclass.
+# Note the schema changes vs skrl 1.x: a single `learning_rate` field covers
+# actor + critic + entropy coefficient (no more separate
+# actor_learning_rate/critic_learning_rate/entropy_learning_rate), and
+# `memory_size` is NOT part of SAC_CFG -- it configures the replay buffer
+# object itself, so it lives under `memory:` below instead of `agent:`.
+# --------------------------------------------------------------------------
+memory:
+  size: 100000                 # replay buffer capacity
+
+agent:
+  batch_size: 256
+  discount_factor: 0.99
+  polyak: 0.005                 # target-network soft-update rate
+  learning_rate: 3.0e-4
+  random_timesteps: 1000        # pure exploration steps before learning starts
+  learning_starts: 1000
+  grad_norm_clip: 0
+  learn_entropy: true
+  initial_entropy_value: 0.2
+  target_entropy: null           # skrl derives -dim(action_space) if left null
+  experiment:
+    directory: "dofbot_reacher_sac"
+    write_interval: 200
+    checkpoint_interval: 5000
+
+trainer:
+  timesteps: 48000
