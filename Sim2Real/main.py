@@ -4,7 +4,7 @@ from detection import WasteDetector
 from arm_module import RobotArm
 from agent import Agent
 from env import ReachDofbotEnv
-
+import utils as ut
 
 # Initialisation
 detector = WasteDetector()
@@ -36,6 +36,7 @@ while True:
         while dist > 0.02:
             # 2. On calcule l'état 
             state_list = env.get_state(pose_object)
+            print("Observation : ",state_list)
 
             # 3. On demande à l'agent de choisir une action 
             delta_angles = agent.select_action(state_list)
@@ -43,7 +44,9 @@ while True:
             angles = my_arm.get_current_angles()[:4]
             print(f"Angles précédents : {angles}")
             angles = angles + delta_angles
-            print(f"Angles à appliquer: {angles}")
+            angles = ut.clip_angles(angles)
+            #angle = [int(angles[i]) for i in range(num_act)]
+            print(f"Angles à appliquer: {angle}")
             my_arm.move_to_waste(angles)
             dist = np.linalg.norm(env.pos_tgt - my_arm.get_claw_pose())
 

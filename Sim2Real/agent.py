@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-
+import numpy as np
 import utils as ut 
 from utils import DELTA_ANGLES
 
@@ -33,9 +33,6 @@ class Agent:
         with torch.no_grad(): 
             action = torch.clamp(self.model(state), -1.0, 1.0)
             action = action.squeeze(0).numpy()
+        action = action*DELTA_ANGLES
         print("Action selected : ",action)
-        #action = action*DELTA_ANGLES # on ramène l'action à un delta d'angle (-3 , 3)
-        #action = ut.denormaliser(action, 90)
-        action = action + DELTA_ANGLES # on pousse ces deltas d'angles pour qu'ils soient compris entre 0 et 6
-        
         return action

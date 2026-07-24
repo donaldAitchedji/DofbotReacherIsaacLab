@@ -21,8 +21,7 @@ class RobotArm:
         self.bin = [0,102,5,14,91, self.gripper_closed]
 
         self.go_home()
-        self.prev_angles = self.get_current_angles()
-
+        self.prev_angles = [90, 99, 3, 9, 91, 49]
     
 
     # ================= COMMANDES BAS NIVEAU =================
@@ -60,8 +59,6 @@ class RobotArm:
 
     def get_claw_pose(self) :
         angles = self.get_current_angles()
-        if angles == None:
-            angles = self.prev_angles
             
         alpha = angles[1] * self.DE2RA
         beta = angles[2] * self.DE2RA
@@ -78,17 +75,25 @@ class RobotArm:
 
         return x, y, z
 
-    def get_current_angles(self):
-        
+    def get_current_angles(self, max_retries=1, retry_delay=0.05): #0.02):
         angles = []
         for i in range(1, 7):
-            angle = self.arm.Arm_serial_servo_read(i)
+            angle = None
+            if i != 5 and i!= 6: #les 4 premiers
+                for attempt in range(max_retries + 1):
+                    angle = self.arm.Arm_serial_servo_read(i)
+                    if angle is not None:
+                        break
+            else: # on teste une seule fois  pour la pince et le wrist twist
+                angle = self.arm.Arm_serial_servo_read(i)
+                
             if angle is None:
-                return self.prev_angles
+                print(f"[WARN] Lecture échouée pour le servo {i} après une tentatives — repli sur prev_angles[{i-1}]")
+                angle = self.prev_angles[i - 1]
+
             angles.append(angle)
-            
+
         self.prev_angles = angles
-            
         return angles
 #arm = RobotArm()
 #print(arm.prev_angles)
