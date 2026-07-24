@@ -1,8 +1,7 @@
 import numpy as np
 import torch
-import copy as cp
 
-DELTA_ANGLES = np.full(4,3,dtype= np.float32)
+DELTA_ANGLES = 3
 
 def normaliser(val, max_val):
   val_list = np.array([v for v in val])
@@ -43,13 +42,3 @@ def load_weights(model):
             continue
         dict_without_std[key] = model_dict["policy"][key]
     return dict_without_std
-    
-def clip_angles(angles):
-    angles_clipped = cp.deepcopy(angles)
-    angles_clipped[1:3] = np.clip(angles_clipped[1:3],0,180)
-    angles_clipped[0],angles_clipped[3] = min(max(0,angles_clipped[0]),180),min(max(0,angles_clipped[3]),180)
-    return angles_clipped
-
-#angles = np.array([-1,99,89,189])
-#angles = clip_angles(angles)
-#print(angles)

@@ -4,7 +4,7 @@ from detection import WasteDetector
 from arm_module import RobotArm
 from agent import Agent
 from env import ReachDofbotEnv
-import utils as ut
+import time
 
 # Initialisation
 detector = WasteDetector()
@@ -44,13 +44,14 @@ while True:
             angles = my_arm.get_current_angles()[:4]
             print(f"Angles précédents : {angles}")
             angles = angles + delta_angles
-            angles = ut.clip_angles(angles)
-            #angle = [int(angles[i]) for i in range(num_act)]
-            print(f"Angles à appliquer: {angle}")
-            my_arm.move_to_waste(angles)
+            angles = np.clip(angles, 0, 180)
+            angles_int = [int(angles[i]) for i in range(num_act)]
+            print(f"Angles à appliquer: {angles_int}")
+            my_arm.move_to_waste(angles_int)
+            my_arm.prev_angles = angles_int
             dist = np.linalg.norm(env.pos_tgt - my_arm.get_claw_pose())
 
-        """
+        
         # 4. On effectue la prise si on atteint la position de prise
         if angles:
                 my_arm.move_to_waste(angles)
@@ -58,7 +59,7 @@ while True:
                 my_arm.lift_object()
                 my_arm.drop_in_bin()
                 time.sleep(1)
-        """
+        
 
     cv.imshow("Robot Cam", frame)
     if cv.waitKey(1) & 0xFF == ord('q'): break

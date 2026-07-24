@@ -75,28 +75,5 @@ class RobotArm:
 
         return x, y, z
 
-    def get_current_angles(self, max_retries=1, retry_delay=0.05): #0.02):
-        angles = []
-        for i in range(1, 7):
-            angle = None
-            if i != 5 and i!= 6: #les 4 premiers
-                for attempt in range(max_retries + 1):
-                    angle = self.arm.Arm_serial_servo_read(i)
-                    if angle is not None:
-                        break
-            else: # on teste une seule fois  pour la pince et le wrist twist
-                angle = self.arm.Arm_serial_servo_read(i)
-                
-            if angle is None:
-                print(f"[WARN] Lecture échouée pour le servo {i} après une tentatives — repli sur prev_angles[{i-1}]")
-                angle = self.prev_angles[i - 1]
-
-            angles.append(angle)
-
-        self.prev_angles = angles
-        return angles
-#arm = RobotArm()
-#print(arm.prev_angles)
-#arm.move_joints(arm.prev_angles[0]+3,arm.prev_angles[1]+3,arm.prev_angles[2]+3,arm.prev_angles[3]+3)
-#print(arm.get_current_angles())
-#print(arm.prev_angles)
+    def get_current_angles(self):
+        return self.prev_angles

@@ -1,10 +1,8 @@
 import torch
 import torch.nn as nn
-import numpy as np
 import utils as ut 
-from utils import DELTA_ANGLES
 
-
+#Architecture of the policy network
 class PolicyNet(nn.Module):
     def __init__(self, num_obs, num_actions):
         super().__init__()
@@ -20,7 +18,7 @@ class PolicyNet(nn.Module):
     def forward(self, x):
         return self.net(x)  # mean action
 
-        
+#Agent class that uses the policy network to select actions based on the current state     
 class Agent: 
     def __init__(self, model, num_obs, num_act):
         self.model = PolicyNet(num_obs, num_act)
@@ -33,6 +31,6 @@ class Agent:
         with torch.no_grad(): 
             action = torch.clamp(self.model(state), -1.0, 1.0)
             action = action.squeeze(0).numpy()
-        action = action*DELTA_ANGLES
+        action = action*ut.DELTA_ANGLES
         print("Action selected : ",action)
         return action
